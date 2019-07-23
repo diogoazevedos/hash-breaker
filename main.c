@@ -15,23 +15,23 @@ const char CHARSET[] = "@$#?!=+%abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 const uint CHARSET_LENGTH = strlen(CHARSET);
 
 void compareMD5(char* input) {
-    unsigned char digest[MD5_DIGEST_LENGTH];
+  unsigned char digest[MD5_DIGEST_LENGTH];
 
-    MD5_CTX context;
+  MD5_CTX context;
 
-    MD5_Init(&context);
-    MD5_Update(&context, input, strlen(input));
-    MD5_Final(digest, &context);
+  MD5_Init(&context);
+  MD5_Update(&context, input, strlen(input));
+  MD5_Final(digest, &context);
 
-    char output[33];
+  char output[33];
 
-    for (uint i = 0; i < 16; i++)
-      sprintf(&output[i * 2], "%02x", (uint)digest[i]);
+  for (uint i = 0; i < 16; i++)
+    sprintf(&output[i * 2], "%02x", (uint)digest[i]);
 
-    if (strcmp(output, secret) == 0) {
-      found = 1;
-      strcpy(response, input);
-    }
+  if (strcmp(output, secret) == 0) {
+    found = 1;
+    strcpy(response, input);
+  }
 }
 
 void sequential() {

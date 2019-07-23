@@ -6,7 +6,7 @@ To build and run using [Docker](https://docker.com), please use the following co
 
 ```sh
 $ docker image build -t hash-breaker .
-$ docker container run hash-breaker <hash> <length> <threads>
+$ docker container run -it hash-breaker <hash> <length> <threads>
 ```
 
 To build and run without Docker:

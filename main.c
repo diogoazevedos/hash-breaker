@@ -35,36 +35,28 @@ void compareMD5(char* input) {
   }
 }
 
+void run(unsigned long long int i) {
+  char* input = malloc(length + 1);
+  input[length] = '\0';
+
+  for (unsigned int j = 0; j < length; j++) {
+    input[j] = CHARSET[(unsigned long long int)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
+  }
+
+  compareMD5(input);
+  free(input);
+}
+
 void sequential() {
   for (unsigned long long int i = 0; i < combinations; i++) {
-    if (found == 1) continue;
-
-    char* input = malloc(length + 1);
-    input[length] = '\0';
-
-    for (unsigned int j = 0; j < length; j++) {
-      input[j] = CHARSET[(unsigned long long int)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
-    }
-
-    compareMD5(input);
-    free(input);
+    if (found == 0) run(i);
   }
 }
 
 void parallel() {
   #pragma omp parallel for shared(found) schedule(dynamic)
   for (unsigned long long int i = 0; i < combinations; i++) {
-    if (found == 1) continue;
-
-    char* input = malloc(length + 1);
-    input[length] = '\0';
-
-    for (unsigned int j = 0; j < length; j++) {
-      input[j] = CHARSET[(unsigned long long int)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
-    }
-
-    compareMD5(input);
-    free(input);
+    if (found == 0) run(i);
   }
 }
 

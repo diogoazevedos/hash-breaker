@@ -9,8 +9,8 @@
 char response[8];
 char* secret;
 struct timeval start, stop;
-uint found = 0, length, threads;
 unsigned long long int combinations;
+unsigned int found = 0, length, threads;
 
 const char CHARSET[] = "@$#?!=+%abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 const unsigned int CHARSET_LENGTH = strlen(CHARSET);

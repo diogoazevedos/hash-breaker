@@ -43,7 +43,7 @@ void sequential() {
     input[length] = '\0';
 
     for (unsigned int j = 0; j < length; j++) {
-      input[j] = CHARSET[(unsigned int)(floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH)];
+      input[j] = CHARSET[(unsigned long long int)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
     }
 
     compareMD5(input);
@@ -60,7 +60,7 @@ void parallel() {
     input[length] = '\0';
 
     for (unsigned int j = 0; j < length; j++) {
-      input[j] = CHARSET[(unsigned int)(floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH)];
+      input[j] = CHARSET[(unsigned long long int)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
     }
 
     compareMD5(input);

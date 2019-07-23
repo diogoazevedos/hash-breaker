@@ -10,9 +10,10 @@ char response[8];
 char* secret;
 struct timeval start, stop;
 uint found = 0, length, threads;
+unsigned long long int combinations;
 
 const char CHARSET[] = "@$#?!=+%abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const uint CHARSET_LENGTH = strlen(CHARSET);
+const unsigned int CHARSET_LENGTH = strlen(CHARSET);
 
 void compareMD5(char* input) {
   unsigned char digest[MD5_DIGEST_LENGTH];
@@ -25,8 +26,8 @@ void compareMD5(char* input) {
 
   char output[33];
 
-  for (uint i = 0; i < 16; i++)
-    sprintf(&output[i * 2], "%02x", (uint)digest[i]);
+  for (unsigned int i = 0; i < 16; i++)
+    sprintf(&output[i * 2], "%02x", (unsigned int)digest[i]);
 
   if (strcmp(output, secret) == 0) {
     found = 1;
@@ -35,14 +36,14 @@ void compareMD5(char* input) {
 }
 
 void sequential() {
-  for (uint i = 0; i < (uint)pow(CHARSET_LENGTH, length); i++) {
+  for (unsigned long long int i = 0; i < combinations; i++) {
     if (found == 1) continue;
 
     char* input = malloc(length + 1);
     input[length] = '\0';
 
-    for (uint j = 0; j < length; j++) {
-      input[j] = CHARSET[(uint)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
+    for (unsigned int j = 0; j < length; j++) {
+      input[j] = CHARSET[(unsigned int)(floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH)];
     }
 
     compareMD5(input);
@@ -52,14 +53,14 @@ void sequential() {
 
 void parallel() {
   #pragma omp parallel for shared(found) schedule(dynamic)
-  for (uint i = 0; i < (uint)pow(CHARSET_LENGTH, length); i++) {
+  for (unsigned long long int i = 0; i < combinations; i++) {
     if (found == 1) continue;
 
     char* input = malloc(length + 1);
     input[length] = '\0';
 
-    for (uint j = 0; j < length; j++) {
-      input[j] = CHARSET[(uint)floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH];
+    for (unsigned int j = 0; j < length; j++) {
+      input[j] = CHARSET[(unsigned int)(floor(i / pow(CHARSET_LENGTH, j)) % CHARSET_LENGTH)];
     }
 
     compareMD5(input);
@@ -67,7 +68,7 @@ void parallel() {
   }
 }
 
-int main(int argc, char* argv[]) {
+int main(unsigned int argc, char* argv[]) {
   if (argc < 3) {
     printf("Usage: %s <hash> <length> <threads>", argv[0]);
     return EXIT_FAILURE;
@@ -76,6 +77,7 @@ int main(int argc, char* argv[]) {
   secret = argv[1];
   length = strtol(argv[2], NULL, 10);
   threads = strtol(argv[3], NULL, 10);
+  combinations = pow(CHARSET_LENGTH, length);
 
   gettimeofday(&start, NULL);
 
